@@ -23,7 +23,7 @@ int main(void)
         if (gpio_pin_toggle_dt(&led) < 0) return 0;
 
         led_state = !led_state;
-        LOG_INF("LED state: %s", led_state ? "ON" : "OFF");
+        printf("LED state: %s\n", led_state ? "ON" : "OFF");
         k_msleep(SLEEP_TIME_MS);
     }
     return 0;

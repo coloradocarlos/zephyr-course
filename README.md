@@ -13,3 +13,9 @@ Follow the following guide:
 
 Make sure to select appropriate OS and to perform all steps till
 [Build the Blinky Sample](https://docs.zephyrproject.org/latest/develop/getting_started/index.html#build-the-blinky-sample).
+
+## Change Log
+
+| Date | Change |
+| ---- | ------ |
+| 27 MAR 26 | Lesson 2 - implement Blinky on the OSD32MP1. |
