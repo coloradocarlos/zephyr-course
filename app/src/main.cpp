@@ -68,6 +68,7 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 int main(void)
 {
     bool led_state = true;
+    uint32_t count = 0;
 
     // Green LED check if the GPIO is ready
     if (!gpio_is_ready_dt(&led_green)) return 0;
@@ -86,7 +87,7 @@ int main(void)
         if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
 
         led_state = !led_state;
-        TRACE_INF("LED state: %s", led_state ? "ON" : "OFF");
+        TRACE_INF("(%d) LED state: %s", ++count, led_state ? "ON" : "OFF");
         k_msleep(SLEEP_TIME_MS);
 
         // Red LED toggle the GPIO
