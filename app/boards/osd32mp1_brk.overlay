@@ -1,0 +1,13 @@
+/ {
+	leds {
+		red_led_2: led_2 {
+			label = "LED2_RED";
+			gpios = <&gpioi 8 GPIO_ACTIVE_HIGH>;
+			status = "okay";
+		};
+	};
+
+	aliases {
+		led1 = &red_led_2;
+	};
+};
