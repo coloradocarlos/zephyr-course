@@ -1,11 +1,8 @@
 #include <stdio.h>
-#include <string.h>
 
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-#include <zephyr/logging/log_output.h>
-#include <openamp/open_amp.h>
 
 #define SLEEP_TIME_MS 1000
 
@@ -30,7 +27,8 @@ static const struct gpio_dt_spec led_green = GPIO_DT_SPEC_GET(LED_NODE, gpios);
 // Red LED configuration:
 static const struct gpio_dt_spec led_red = GPIO_DT_SPEC_GET(LED_NODE_2, gpios);
 
-LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
+// TODO: Uncomment this to enable Zephyr logging
+// LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 
 int main(void)
 {
