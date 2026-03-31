@@ -9,39 +9,6 @@
 
 #define SLEEP_TIME_MS 1000
 
-/* Define the log buffer size and storage */
-#define TRACE_BUF_SIZE 1024
-char system_log_buf[TRACE_BUF_SIZE] __attribute__((section(".trace_buffer")));
-static uint32_t log_buf_index = 0;
-
-/* Resource table structure */
-struct my_resource_table {
-    struct resource_table base;
-    uint32_t offset[1]; /* One entry for the trace */
-
-    struct fw_rsc_trace trace;
-} __packed;
-
-/* Define the table in the section Linux expects */
-__attribute__((section(".resource_table")))
-const struct my_resource_table board_res_table = {
-    .base = {
-        .ver = 1,
-        .num = 1,
-        .reserved = {0, 0},
-    },
-    .offset = {
-        offsetof(struct my_resource_table, trace),
-    },
-    .trace = {
-        .type = RSC_TRACE,
-        .da = (uint32_t)&system_log_buf, /* Device Address */
-        .len = TRACE_BUF_SIZE,
-        .reserved = 0,
-        .name = "trace0",
-    },
-};
-
 /*
  * Zephyr's LOG_INF backend doesn't output to ram_console/trace0.
  * Only printf() reaches /sys/kernel/debug/remoteproc/remoteproc0/trace0.
