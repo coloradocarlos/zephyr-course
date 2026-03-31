@@ -14,6 +14,14 @@ Follow the following guide:
 Make sure to select appropriate OS and to perform all steps till
 [Build the Blinky Sample](https://docs.zephyrproject.org/latest/develop/getting_started/index.html#build-the-blinky-sample).
 
+## Board setup
+
+This builds for the Octavo OSD32MP1-BRK board. See https://docs.zephyrproject.org/latest/boards/oct/osd32mp1_brk/doc/osd32mp1_brk.html. To build:
+
+```bash
+$ west build --board osd32mp1_brk app -p
+```
+
 ## Change Log
 
 | Date | Change |
