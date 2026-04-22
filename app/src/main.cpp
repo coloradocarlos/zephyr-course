@@ -1,10 +1,9 @@
 #include <stdio.h>
 
+#include <zephyr/autoconf.h>
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-
-#define SLEEP_TIME_MS 1000
 
 /*
  * Zephyr's LOG_INF backend doesn't output to ram_console/trace0.
@@ -53,11 +52,11 @@ int main(void)
 
         led_state = !led_state;
         TRACE_INF("(%d) LED state: %s", ++count, led_state ? "ON" : "OFF");
-        k_msleep(SLEEP_TIME_MS);
+        k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
 
         // Red LED toggle the GPIO
         if (gpio_pin_toggle_dt(&led_red) < 0) return 0;
-        k_msleep(SLEEP_TIME_MS);
+        k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
     }
     return 0;
 }

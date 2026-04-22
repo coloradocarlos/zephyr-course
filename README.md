@@ -28,3 +28,4 @@ $ west build --board osd32mp1_brk app -p
 | ---- | ------ |
 | 27 MAR 26 | Lesson 2 - implement Blinky on the OSD32MP1. |
 | 07 APR 26 | Lesson 3 - add LED config to Kconfig. |
+| 21 APR 26 | Lesson 4 - add app devicetree to support both red and green LED's |
