@@ -1,0 +1,6 @@
+board:
+  name: my_little_board
+  full_name: My Little Board
+  vendor: doorstep
+  socs:
+    - name: osd32mp15x
