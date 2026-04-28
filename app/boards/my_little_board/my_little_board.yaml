@@ -1,4 +1,4 @@
-identifier: my-little-board
+identifier: my_little_board
 name: My Little Board
 type: mcu
 arch: arm
