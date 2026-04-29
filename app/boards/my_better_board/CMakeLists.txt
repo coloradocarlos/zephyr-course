@@ -1,6 +1,5 @@
 # Copyright (c) 2024 Antmicro <www.antmicro.com>
 # SPDX-License-Identifier: Apache-2.0
 
-config BOARD_MY_BETTER_BOARD
-	select SOC_OSD32MP15X
-	select BOARD_EARLY_INIT_HOOK
+zephyr_library()
+zephyr_library_sources(board.c)
