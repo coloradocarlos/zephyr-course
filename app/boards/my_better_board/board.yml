@@ -1,0 +1,11 @@
+board:
+  name: my_better_board
+  full_name: My Better Board
+  vendor: doorstep
+  revision:
+    format: major.minor.patch
+    default: "1.0.0"
+    revisions:
+      - name: "1.0.0"
+  socs:
+    - name: osd32mp15x
