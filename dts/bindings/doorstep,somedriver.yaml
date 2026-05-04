@@ -1,0 +1,4 @@
+description: Some driver (course stub)
+compatible: doorstep,somedriver
+
+include: base.yaml

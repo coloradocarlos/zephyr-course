@@ -1,0 +1,6 @@
+/ {
+    doorstep_somedriver0: doorstep_somedriver {
+    compatible = "doorstep,somedriver";
+    status = "okay";
+    }  ;
+};
