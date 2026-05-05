@@ -42,12 +42,23 @@ void test(void)
 		TRACE_ERR("Device not found");
 		return;
 	}
-	int ret = sensor_channel_get(dev, SENSOR_CHAN_ALL, NULL);
+
+	// Fetch sensor value
+	int ret = sensor_sample_fetch(dev);
+	if (ret < 0) {
+		TRACE_ERR("Failed to fetch sensor value");
+		return;
+	}
+	TRACE_INF("Sensor sample_fetch returned %d", ret);
+
+	// Get sensor value for all channels
+	struct sensor_value val;
+	ret = sensor_channel_get(dev, SENSOR_CHAN_ALL, &val);
 	if (ret < 0) {
 		TRACE_ERR("Failed to get sensor value");
 		return;
 	}
-	TRACE_INF("Sensor channel_get returned %d", ret);
+	TRACE_INF("Sensor channel_get returned %d, %d", val.val1, val.val2);
 #else
 	TRACE_INF("doorstep_somedriver disabled in configuration");
 #endif
