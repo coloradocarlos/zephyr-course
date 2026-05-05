@@ -33,7 +33,7 @@ static const struct gpio_dt_spec led_red = GPIO_DT_SPEC_GET(LED_NODE_1, gpios);
 
 namespace {
 
-void test(void)
+void call_driver_api(void)
 {
 #if IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
 	TRACE_INF("doorstep_somedriver probe");
@@ -49,7 +49,10 @@ void test(void)
 		TRACE_ERR("Failed to fetch sensor value");
 		return;
 	}
-	TRACE_INF("Sensor sample_fetch returned %d", ret);
+	TRACE_INF("Sensor driver: sensor_sample_fetch returned %d", ret);
+
+	// Sleep for half a second to allow the LED to visually toggle
+	k_msleep(500);
 
 	// Get sensor value for all channels
 	struct sensor_value val;
@@ -58,7 +61,7 @@ void test(void)
 		TRACE_ERR("Failed to get sensor value");
 		return;
 	}
-	TRACE_INF("Sensor channel_get returned %d, %d", val.val1, val.val2);
+	TRACE_INF("Sensor driver: sensor_channel_get returned %d, %d", val.val1, val.val2);
 #else
 	TRACE_INF("doorstep_somedriver disabled in configuration");
 #endif
@@ -68,33 +71,6 @@ void test(void)
 
 int main(void)
 {
-	test();
-	bool led_state = true;
-	uint32_t count = 0;
-
-	// Green LED check if the GPIO is ready
-	if (!gpio_is_ready_dt(&led_green)) return 0;
-	// Red LED check if the GPIO is ready
-	if (!gpio_is_ready_dt(&led_red)) return 0;
-
-	// Green LED configure the GPIO as output and active high
-	if (gpio_pin_configure_dt(&led_green, GPIO_OUTPUT_ACTIVE) < 0) return 0;
-	// Red LED configure the GPIO as output and active high
-	if (gpio_pin_configure_dt(&led_red, GPIO_OUTPUT_ACTIVE) < 0) return 0;
-
-	printk("LED application started - trace0 enabled\n");
-
-	while (1) {
-		// Green LED toggle the GPIO
-		if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
-
-		led_state = !led_state;
-		TRACE_INF("(%d) LED state: %s", ++count, led_state ? "ON" : "OFF");
-		k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
-
-		// Red LED toggle the GPIO
-		if (gpio_pin_toggle_dt(&led_red) < 0) return 0;
-		k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
-	}
+	call_driver_api();
 	return 0;
 }
