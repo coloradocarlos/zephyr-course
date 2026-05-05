@@ -44,4 +44,5 @@ $ west build -b my_better_board app -p always
 | 07 APR 26 | Lesson 3 - add LED config to Kconfig. |
 | 21 APR 26 | Lesson 4 - add app devicetree to support both red and green LED's |
 | 26 APR 26 | Lesson 5 task 1 - Use copy and rename method to create "my_little_board" new board definition. This also builds the hello world sample instead of blinky. |
- 28 APR 26 | Lesson 5 task 2 - Use "from scratch" method to create "my_better_board" new board definition. This also prints "Board initialized" before entering the main entry point. |
+| 28 APR 26 | Lesson 5 task 2 - Use "from scratch" method to create "my_better_board" new board definition. This also prints "Board initialized" before entering the main entry point. |
+| 04 MAY 26 | Lesson 6 task 1 - Add sensor_sample_fetch and sensor_channel_get to turn on and off the green LED. |
