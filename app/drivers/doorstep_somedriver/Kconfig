@@ -1,0 +1,8 @@
+menuconfig DOORSTEP_SOMEDRIVER
+	bool "My Custom Driver"
+	default y
+	depends on SENSOR
+	depends on DT_HAS_DOORSTEP_SOMEDRIVER_ENABLED
+	select I2C
+	help
+	  Enable the custom driver when a doorstep,somedriver devicetree node is present (status okay).

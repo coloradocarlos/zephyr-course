@@ -96,3 +96,5 @@ endif # APP_LED_SUBSYSTEM
 
 # Sources Kconfig.zephyr in the Zephyr root directory ($srctree).
 source "Kconfig.zephyr"
+
+source "${APPLICATION_SOURCE_DIR}/drivers/doorstep_somedriver/Kconfig"
