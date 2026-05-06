@@ -71,6 +71,9 @@ void call_driver_api(void)
 
 int main(void)
 {
+	TRACE_INF("Main function started");
+	TRACE_INF("Calling driver API");
 	call_driver_api();
+	TRACE_INF("Main function finished");
 	return 0;
 }

@@ -25,25 +25,25 @@ static const struct gpio_dt_spec led_green = GPIO_DT_SPEC_GET(LED_NODE_0, gpios)
 
 static int sensor_sample_fetch_impl(const struct device *dev, enum sensor_channel chan)
 {
-	TRACE_INF("sensor_sample_fetch_impl %d", chan);
+	TRACE_INF("sensor_sample_fetch_impl for channel %d", chan);
 	// Green LED toggle the GPIO
-	TRACE_INF("Green LED toggle (fetch)");
+	TRACE_INF("Green LED toggle (sample fetch)");
 	if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
 	return 0;
 }
 
 static int sensor_channel_get_impl(const struct device *dev, enum sensor_channel chan, struct sensor_value *val)
 {
-	TRACE_INF("sensor_channel_get_impl %d", chan);
+	TRACE_INF("sensor_channel_get_impl for channel %d", chan);
 	// Green LED toggle the GPIO
-	TRACE_INF("Green LED toggle (get)");
+	TRACE_INF("Green LED toggle (channel get)");
 	if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
 	val->val1 = 100;	// TODO: Replace with actual sensor value
 	val->val2 = 200;	// TODO: Replace with actual sensor value
 	return 0;
 }
 
-static DEVICE_API(sensor, api_iomico_lecture) = {
+static DEVICE_API(sensor, api_doorstep_somedriver) = {
 	.sample_fetch = sensor_sample_fetch_impl,
 	.channel_get = sensor_channel_get_impl,
 };
@@ -62,4 +62,4 @@ static int init_my_impl(const struct device *dev)
 }
 
 DEVICE_DT_INST_DEFINE(0, init_my_impl, NULL, NULL, NULL, POST_KERNEL,
-		      CONFIG_SENSOR_INIT_PRIORITY, &api_iomico_lecture);
+		      CONFIG_SENSOR_INIT_PRIORITY, &api_doorstep_somedriver);
