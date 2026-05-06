@@ -3,7 +3,8 @@
 #include <stdio.h>
 
 #include <zephyr/drivers/gpio.h>
-#include <zephyr/drivers/sensor.h>
+
+#include <zephyr/drivers/doorstep.h>
 
 /*
  * Zephyr's LOG_INF backend doesn't output to ram_console/trace0.
@@ -22,44 +23,52 @@
 // Green LED configuration:
 static const struct gpio_dt_spec led_green = GPIO_DT_SPEC_GET(LED_NODE_0, gpios);
 
-
-static int sensor_sample_fetch_impl(const struct device *dev, enum sensor_channel chan)
+static int doorstep_do_this_impl(const struct device *dev, int foo, int bar)
 {
-	TRACE_INF("sensor_sample_fetch_impl for channel %d", chan);
-	// Green LED toggle the GPIO
-	TRACE_INF("Green LED toggle (sample fetch)");
-	if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
+	ARG_UNUSED(dev);
+	TRACE_INF("doorstep_do_this_impl foo=%d bar=%d", foo, bar);
+	TRACE_INF("Green LED toggle (do_this)");
+	int ret = gpio_pin_toggle_dt(&led_green);
+	if (ret < 0) {
+		TRACE_WRN("gpio_pin_toggle_dt failed: %d", ret);
+		return ret;
+	}
 	return 0;
 }
 
-static int sensor_channel_get_impl(const struct device *dev, enum sensor_channel chan, struct sensor_value *val)
+static void doorstep_do_that_impl(const struct device *dev, void *baz)
 {
-	TRACE_INF("sensor_channel_get_impl for channel %d", chan);
-	// Green LED toggle the GPIO
-	TRACE_INF("Green LED toggle (channel get)");
-	if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
-	val->val1 = 100;	// TODO: Replace with actual sensor value
-	val->val2 = 200;	// TODO: Replace with actual sensor value
-	return 0;
+	ARG_UNUSED(dev);
+	TRACE_INF("doorstep_do_that_impl baz=%p", baz);
+	TRACE_INF("Green LED toggle (do_that)");
+	int ret = gpio_pin_toggle_dt(&led_green);
+	if (ret < 0) {
+		TRACE_WRN("gpio_pin_toggle_dt failed: %d", ret);
+		return;
+	}
 }
 
-static DEVICE_API(sensor, api_doorstep_somedriver) = {
-	.sample_fetch = sensor_sample_fetch_impl,
-	.channel_get = sensor_channel_get_impl,
+static DEVICE_API(doorstep, api_doorstep_somedriver) = {
+	.do_this = doorstep_do_this_impl,
+	.do_that = doorstep_do_that_impl,
 };
 
 static int init_my_impl(const struct device *dev)
 {
+	ARG_UNUSED(dev);
 	TRACE_INF("init_my_impl");
 	// Green LED check if the GPIO is ready
-	if (!gpio_is_ready_dt(&led_green)) return 0;
+	if (!gpio_is_ready_dt(&led_green)) {
+		return 0;
+	}
 
 	// Green LED configure the GPIO as output and active high
-	if (gpio_pin_configure_dt(&led_green, GPIO_OUTPUT_ACTIVE) < 0) return 0;
-
+	if (gpio_pin_configure_dt(&led_green, GPIO_OUTPUT_ACTIVE) < 0) {
+		return 0;
+	}
 
 	return 0;
 }
 
 DEVICE_DT_INST_DEFINE(0, init_my_impl, NULL, NULL, NULL, POST_KERNEL,
-		      CONFIG_SENSOR_INIT_PRIORITY, &api_doorstep_somedriver);
+		      CONFIG_DOORSTEP_INIT_PRIORITY, &api_doorstep_somedriver);

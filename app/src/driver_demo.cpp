@@ -7,7 +7,7 @@
 #include <zephyr/kernel.h>
 
 #if IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
-#include <zephyr/drivers/sensor.h>
+#include <zephyr/drivers/doorstep.h>
 #endif
 
 /*
@@ -43,25 +43,21 @@ void call_driver_api(void)
 		return;
 	}
 
-	// Fetch sensor value
-	int ret = sensor_sample_fetch(dev);
+	int foo = 1;
+	int bar = 2;
+	int ret = doorstep_do_this(dev, foo, bar);
 	if (ret < 0) {
-		TRACE_ERR("Failed to fetch sensor value");
+		TRACE_ERR("doorstep_do_this failed: %d", ret);
 		return;
 	}
-	TRACE_INF("Sensor driver: sensor_sample_fetch returned %d", ret);
+	TRACE_INF("doorstep_do_this returned %d", ret);
 
 	// Sleep for half a second to allow the LED to visually toggle
 	k_msleep(500);
 
-	// Get sensor value for all channels
-	struct sensor_value val;
-	ret = sensor_channel_get(dev, SENSOR_CHAN_ALL, &val);
-	if (ret < 0) {
-		TRACE_ERR("Failed to get sensor value");
-		return;
-	}
-	TRACE_INF("Sensor driver: sensor_channel_get returned %d, %d", val.val1, val.val2);
+	void *baz = NULL;
+	doorstep_do_that(dev, baz);
+	TRACE_INF("doorstep_do_that finished");
 #else
 	TRACE_INF("doorstep_somedriver disabled in configuration");
 #endif
