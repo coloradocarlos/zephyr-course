@@ -1,8 +1,17 @@
 menuconfig DOORSTEP_SOMEDRIVER
 	bool "My Custom Driver"
 	default y
-	depends on SENSOR
+	depends on GPIO
 	depends on DT_HAS_DOORSTEP_SOMEDRIVER_ENABLED
-	select I2C
 	help
 	  Enable the custom driver when a doorstep,somedriver devicetree node is present (status okay).
+
+if DOORSTEP_SOMEDRIVER
+
+config DOORSTEP_INIT_PRIORITY
+	int "Doorstep driver init priority"
+	default 90
+	help
+	  Initialization priority for doorstep device instances (see SYS_INIT / kernel priorities).
+
+endif # DOORSTEP_SOMEDRIVER
