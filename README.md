@@ -36,6 +36,20 @@ $ west build -b my_little_board app -p always
 $ west build -b my_better_board app -p always
 ```
 
+## UART shell on the OSD32MP1
+
+The Linux A7 console interface is assigned to dedicated pins on the board. They are labeled GND, RX, and TX. In the device tree, these are assigned to `uart4` on pins PB2 (UART4_RX) and PG11 (UART4_TX) which are aliased to `serial0`. Reference the schematic at https://octavosystems.com/docs/osd32mp1-brk-schematics/
+
+For using the Zephyr M4 UART shell, we need to allocate some of the breakout pins and not use the A7 default UART console on `uart4` to avoid conflicts. This requires using another serial port such as `uart7` even though it is shared with the A7. First, solder 3 header pins for GND, PA15 (UART7_TX), and PB3 (UART7_RX). Then use a second serial UART TTL cable connected to these pins to open the console (default baud rate 115200 and 8N1). You should see a prompt using picocom or minicom:
+
+```
+uart:~$
+uart:~$ kernel uptime -p
+uptime: 0 days, 0 hours, 36 minutes, 26 seconds, 682 milliseconds
+```
+
+See https://octavosystems.com/wp-content/uploads/2025/05/Default-Pin-Mapping-1.pdf for the PCB layout map.
+
 ## Change Log
 
 | Date | Change |
@@ -47,3 +61,4 @@ $ west build -b my_better_board app -p always
 | 28 APR 26 | Lesson 5 task 2 - Use "from scratch" method to create "my_better_board" new board definition. This also prints "Board initialized" before entering the main entry point. |
 | 04 MAY 26 | Lesson 6 task 1 - Add sensor_sample_fetch and sensor_channel_get to turn on and off the green LED. |
 | 06 MAY 26 | Lesson 6 task 2 - Add custom API functions called doorstep_do_this() and doorstep_do_that() with custom parameters. See doorstep.h for API usage. |
+| 10 MAY 26 | Lesson 7 task 1 - enable uart shell.

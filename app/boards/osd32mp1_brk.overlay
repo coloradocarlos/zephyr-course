@@ -3,8 +3,15 @@
  * See: https://www.we-online.com/components/products/datasheet/150066SV74000.pdf
  * The green LED is defined in the base board devicetree called green_led_2 (alias led0);
  * this overlay adds the red LED and its alias (led1).
+ *
+ * Shell serial backend uses UART7 via chosen zephyr,shell-uart.
  */
 / {
+	chosen {
+		zephyr,console = &uart7;
+		zephyr,shell-uart = &uart7;
+	};
+
 	leds {
 		red_led_2: led_2 {
 			label = "LED2_RED";
