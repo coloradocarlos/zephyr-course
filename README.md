@@ -61,4 +61,4 @@ See https://octavosystems.com/wp-content/uploads/2025/05/Default-Pin-Mapping-1.p
 | 28 APR 26 | Lesson 5 task 2 - Use "from scratch" method to create "my_better_board" new board definition. This also prints "Board initialized" before entering the main entry point. |
 | 04 MAY 26 | Lesson 6 task 1 - Add sensor_sample_fetch and sensor_channel_get to turn on and off the green LED. |
 | 06 MAY 26 | Lesson 6 task 2 - Add custom API functions called doorstep_do_this() and doorstep_do_that() with custom parameters. See doorstep.h for API usage. |
-| 10 MAY 26 | Lesson 7 task 1 - enable uart shell.
+| 10 MAY 26 | Lesson 7 task 1 - Enable uart shell. To use task 1 sensor API, set CONFIG_SENSOR=y.

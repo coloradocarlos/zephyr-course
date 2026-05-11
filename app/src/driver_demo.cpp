@@ -7,7 +7,12 @@
 #include <zephyr/kernel.h>
 
 #if IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
+#if IS_ENABLED(CONFIG_SENSOR)
+#include <zephyr/drivers/gpio.h>
+#include <zephyr/drivers/sensor.h>
+#else
 #include <zephyr/drivers/doorstep.h>
+#endif
 #endif
 
 /*
@@ -33,7 +38,47 @@ static const struct gpio_dt_spec led_red = GPIO_DT_SPEC_GET(LED_NODE_1, gpios);
 
 namespace {
 
-void call_driver_api(void)
+// Lesson 6 and 7: Task 1: Use the sensor driver API
+#if IS_ENABLED(CONFIG_SENSOR)
+
+void call_driver_api_with_sensor_driver(void)
+{
+#if IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
+	TRACE_INF("doorstep_somedriver probe");
+	const struct device *dev = DEVICE_DT_GET(DT_NODELABEL(doorstep_somedriver0));
+	if (dev == NULL) {
+		TRACE_ERR("Device not found");
+		return;
+	}
+
+	// Fetch sensor value
+	int ret = sensor_sample_fetch(dev);
+	if (ret < 0) {
+		TRACE_ERR("Failed to fetch sensor value");
+		return;
+	}
+	TRACE_INF("Sensor driver: sensor_sample_fetch returned %d", ret);
+
+	// Sleep for half a second to allow the LED to visually toggle
+	k_msleep(500);
+
+	// Get sensor value for all channels
+	struct sensor_value val;
+	ret = sensor_channel_get(dev, SENSOR_CHAN_ALL, &val);
+	if (ret < 0) {
+		TRACE_ERR("Failed to get sensor value");
+		return;
+	}
+	TRACE_INF("Sensor driver: sensor_channel_get returned %d, %d", val.val1, val.val2);
+#else
+	TRACE_INF("sensor driver disabled in configuration");
+#endif
+}
+
+#else
+
+// Lesson 6 and 7: Task 2: Use the custom extension API
+void call_driver_api_with_custom_extension(void)
 {
 #if IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
 	TRACE_INF("doorstep_somedriver probe");
@@ -63,13 +108,22 @@ void call_driver_api(void)
 #endif
 }
 
+#endif
+
 } /* namespace */
 
 int main(void)
 {
 	TRACE_INF("Main function started");
 	TRACE_INF("Calling driver API");
-	call_driver_api();
+
+// Lesson 6 and 7: Task 1: Use the sensor driver API
+// Lesson 6 and 7: Task 2: Use the custom extension API
+#if IS_ENABLED(CONFIG_SENSOR)
+	call_driver_api_with_sensor_driver(); // Task 1
+#else
+	call_driver_api_with_custom_extension(); // Task 2
+#endif
 	TRACE_INF("Main function finished");
 	return 0;
 }
