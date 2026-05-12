@@ -41,7 +41,7 @@ static int sensor_sample_fetch_impl(const struct device *dev, enum sensor_channe
 	// Green LED toggle the GPIO
 	TRACE_INF("Green LED toggle (sample fetch)");
 	if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
-	return 0;
+	return 50;	// TODO: Replace with actual sensor value
 }
 
 static int sensor_channel_get_impl(const struct device *dev, enum sensor_channel chan, struct sensor_value *val)
