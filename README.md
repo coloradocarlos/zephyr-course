@@ -57,6 +57,8 @@ See https://octavosystems.com/wp-content/uploads/2025/05/Default-Pin-Mapping-1.p
 `sensor read`: returns a pair of values (get) along with a return code
 `sensor info`: prints the device name and ready state
 
+Invoking `sensor fetch` and `sensor read` will toggle the green LED.
+
 ## Change Log
 
 | Date | Change |
