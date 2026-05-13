@@ -74,7 +74,7 @@ static int doorstep_do_this_impl(const struct device *dev, int foo, int bar)
 		TRACE_WRN("gpio_pin_toggle_dt failed: %d", ret);
 		return ret;
 	}
-	return 0;
+	return foo + bar;
 }
 
 static void doorstep_do_that_impl(const struct device *dev, void *baz)
