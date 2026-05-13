@@ -73,6 +73,8 @@ Note: while the command is named `sensor`, the driver implementation does not us
 
 Invoking `sensor get` will toggle the green user LED.
 
+Setting `foo` and `bar` to negative values is valid. It simulates an error condition and displays red letters on the shell console.
+
 ## Change Log
 
 | Date | Change |
