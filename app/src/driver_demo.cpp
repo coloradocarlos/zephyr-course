@@ -7,7 +7,15 @@
 #include <zephyr/kernel.h>
 
 #if IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
+#if IS_ENABLED(CONFIG_SENSOR)
+#include <zephyr/drivers/gpio.h>
+#include <zephyr/drivers/sensor.h>
+#if IS_ENABLED(CONFIG_SHELL)
+#include <zephyr/shell/shell.h>
+#endif
+#else
 #include <zephyr/drivers/doorstep.h>
+#endif
 #endif
 
 /*
@@ -33,7 +41,47 @@ static const struct gpio_dt_spec led_red = GPIO_DT_SPEC_GET(LED_NODE_1, gpios);
 
 namespace {
 
-void call_driver_api(void)
+// Lesson 6 and 7: Task 1: Use the sensor driver API
+#if IS_ENABLED(CONFIG_SENSOR)
+
+void call_driver_api_with_sensor_driver(void)
+{
+#if IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
+	TRACE_INF("doorstep_somedriver probe");
+	const struct device *dev = DEVICE_DT_GET(DT_NODELABEL(doorstep_somedriver0));
+	if (dev == NULL) {
+		TRACE_ERR("Device not found");
+		return;
+	}
+
+	// Fetch sensor value
+	int ret = sensor_sample_fetch(dev);
+	if (ret < 0) {
+		TRACE_ERR("Failed to fetch sensor value");
+		return;
+	}
+	TRACE_INF("Sensor driver: sensor_sample_fetch returned %d", ret);
+
+	// Sleep for half a second to allow the LED to visually toggle
+	k_msleep(500);
+
+	// Get sensor value for all channels
+	struct sensor_value val;
+	ret = sensor_channel_get(dev, SENSOR_CHAN_ALL, &val);
+	if (ret < 0) {
+		TRACE_ERR("Failed to get sensor value");
+		return;
+	}
+	TRACE_INF("Sensor driver: sensor_channel_get returned %d, %d", val.val1, val.val2);
+#else
+	TRACE_INF("sensor driver disabled in configuration");
+#endif
+}
+
+#else
+
+// Lesson 6 and 7: Task 2: Use the custom extension API
+void call_driver_api_with_custom_extension(void)
 {
 #if IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
 	TRACE_INF("doorstep_somedriver probe");
@@ -63,13 +111,97 @@ void call_driver_api(void)
 #endif
 }
 
+#endif
+
 } /* namespace */
+
+#if IS_ENABLED(CONFIG_SHELL) && IS_ENABLED(CONFIG_SENSOR) && IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
+
+extern "C" {
+
+static int cmd_sensor_fetch(const struct shell *sh, size_t argc, char **argv)
+{
+	ARG_UNUSED(argc);
+	ARG_UNUSED(argv);
+
+	const struct device *dev = DEVICE_DT_GET(DT_NODELABEL(doorstep_somedriver0));
+
+	if (!device_is_ready(dev)) {
+		shell_error(sh, "Sensor device not ready");
+		return -ENODEV;
+	}
+
+	int ret = sensor_sample_fetch(dev);
+
+	if (ret < 0) {
+		shell_error(sh, "sensor_sample_fetch failed: %d", ret);
+	} else {
+		shell_print(sh, "sensor_sample_fetch: %d", ret);
+	}
+
+	return ret;
+}
+
+static int cmd_sensor_read(const struct shell *sh, size_t argc, char **argv)
+{
+	ARG_UNUSED(argc);
+	ARG_UNUSED(argv);
+
+	const struct device *dev = DEVICE_DT_GET(DT_NODELABEL(doorstep_somedriver0));
+
+	if (!device_is_ready(dev)) {
+		shell_error(sh, "Sensor device not ready");
+		return -ENODEV;
+	}
+
+	struct sensor_value val;
+	int ret = sensor_channel_get(dev, SENSOR_CHAN_ALL, &val);
+
+	if (ret < 0) {
+		shell_error(sh, "sensor_channel_get failed: %d", ret);
+	} else {
+		shell_print(sh, "sensor_channel_get: ret=%d val1=%d val2=%d", ret, val.val1, val.val2);
+	}
+
+	return ret;
+}
+
+static int cmd_sensor_info(const struct shell *sh, size_t argc, char **argv)
+{
+	ARG_UNUSED(argc);
+	ARG_UNUSED(argv);
+
+	const struct device *dev = DEVICE_DT_GET(DT_NODELABEL(doorstep_somedriver0));
+
+	shell_print(sh, "name: %s", dev->name);
+	shell_print(sh, "ready: %s", device_is_ready(dev) ? "true" : "false");
+	return 0;
+}
+
+} /* extern "C" */
+
+SHELL_STATIC_SUBCMD_SET_CREATE(sub_sensor,
+			     SHELL_CMD(fetch, NULL, "Fetch a new sensor sample", cmd_sensor_fetch),
+			     SHELL_CMD(read, NULL, "Read sensor channel values", cmd_sensor_read),
+			     SHELL_CMD(info, NULL, "Show sensor device name and ready state", cmd_sensor_info),
+			     SHELL_SUBCMD_SET_END);
+
+SHELL_CMD_REGISTER(sensor, &sub_sensor, "Sensor commands", NULL);
+
+#endif
 
 int main(void)
 {
 	TRACE_INF("Main function started");
 	TRACE_INF("Calling driver API");
-	call_driver_api();
+
+// Lesson 6 and 7: Task 1: Use the sensor driver API
+// Lesson 6 and 7: Task 2: Use the custom extension API
+#if IS_ENABLED(CONFIG_SENSOR)
+	call_driver_api_with_sensor_driver(); // Task 1
+#else
+	call_driver_api_with_custom_extension(); // Task 2
+#endif
 	TRACE_INF("Main function finished");
 	return 0;
 }
