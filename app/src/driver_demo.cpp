@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include <limits.h>
+
 #include <zephyr/autoconf.h>
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
@@ -10,11 +12,11 @@
 #if IS_ENABLED(CONFIG_SENSOR)
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/sensor.h>
-#if IS_ENABLED(CONFIG_SHELL)
-#include <zephyr/shell/shell.h>
-#endif
 #else
 #include <zephyr/drivers/doorstep.h>
+#endif
+#if IS_ENABLED(CONFIG_SHELL)
+#include <zephyr/shell/shell.h>
 #endif
 #endif
 
@@ -187,6 +189,91 @@ SHELL_STATIC_SUBCMD_SET_CREATE(sub_sensor,
 			     SHELL_SUBCMD_SET_END);
 
 SHELL_CMD_REGISTER(sensor, &sub_sensor, "Sensor commands", NULL);
+
+#endif
+
+#if IS_ENABLED(CONFIG_SHELL) && !IS_ENABLED(CONFIG_SENSOR) && IS_ENABLED(CONFIG_DOORSTEP_SOMEDRIVER)
+
+/* SHELL_CMD_ARG mandatory count includes the subcommand token: set + foo + bar */
+#define SENSOR_SHELL_SET_ARGC 3
+
+extern "C" {
+
+/* Last parameters for sensor get; default to zero until sensor set. */
+static int sensor_shell_foo = 0;
+static int sensor_shell_bar = 0;
+
+static int cmd_sensor_get(const struct shell *sh, size_t argc, char **argv)
+{
+	ARG_UNUSED(argc);
+	ARG_UNUSED(argv);
+
+	const struct device *dev = DEVICE_DT_GET(DT_NODELABEL(doorstep_somedriver0));
+
+	if (!device_is_ready(dev)) {
+		shell_error(sh, "Doorstep device not ready");
+		return -ENODEV;
+	}
+
+	const int foo = sensor_shell_foo;
+	const int bar = sensor_shell_bar;
+	int ret = doorstep_do_this(dev, foo, bar);
+
+	if (ret < 0) {
+		shell_error(sh, "doorstep_do_this failed: %d", ret);
+	} else {
+		shell_print(sh, "doorstep_do_this(foo=%d, bar=%d): %d", foo, bar, ret);
+	}
+
+	return ret;
+}
+
+/* argv: [0]=set, [1]=foo, [2]=bar — argc fixed by SHELL_CMD_ARG(..., SENSOR_SHELL_SET_ARGC, 0). */
+static int cmd_sensor_set(const struct shell *sh, size_t argc, char **argv)
+{
+	ARG_UNUSED(argc);
+
+	int parse_err = 0;
+	const long foo_l = shell_strtol(argv[1], 10, &parse_err);
+
+	if (parse_err != 0) {
+		shell_error(sh, "foo must be an integer");
+		return parse_err;
+	}
+
+	parse_err = 0;
+	const long bar_l = shell_strtol(argv[2], 10, &parse_err);
+
+	if (parse_err != 0) {
+		shell_error(sh, "bar must be an integer");
+		return parse_err;
+	}
+
+	if (foo_l > INT_MAX || foo_l < INT_MIN || bar_l > INT_MAX || bar_l < INT_MIN) {
+		shell_error(sh, "foo and bar must fit in int range");
+		return -ERANGE;
+	}
+
+	const int foo = (int)foo_l;
+	const int bar = (int)bar_l;
+
+	sensor_shell_foo = foo;
+	sensor_shell_bar = bar;
+
+	shell_print(sh, "sensor set: success (foo=%d, bar=%d)", foo, bar);
+
+	return 0;
+}
+
+} /* extern "C" */
+
+SHELL_STATIC_SUBCMD_SET_CREATE(sub_sensor_doorstep,
+			       SHELL_CMD(get, NULL, "Call doorstep_do_this with last foo/bar from sensor set", cmd_sensor_get),
+			       SHELL_CMD_ARG(set, NULL, "Store integer foo and bar for sensor get", cmd_sensor_set,
+					      SENSOR_SHELL_SET_ARGC, 0),
+			       SHELL_SUBCMD_SET_END);
+
+SHELL_CMD_REGISTER(sensor, &sub_sensor_doorstep, "Doorstep sensor commands", NULL);
 
 #endif
 

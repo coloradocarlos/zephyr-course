@@ -61,6 +61,18 @@ To enable the sensor commands, set CONFIG_SENSOR=y in the prj.conf file.
 
 Invoking `sensor fetch` and `sensor read` will toggle the green user LED.
 
+## Custom extension root shell
+
+To enable the custom extension commands, set CONFIG_SENSOR=n in the prj.conf file.
+
+Note: while the command is named `sensor`, the driver implementation does not use the Zephyr sensor API. Instead, it uses the custom `doorstep_do_this` driver call.
+
+- `sensor`: brief description
+- `sensor set`: set values `foo` and `bar` in memory. At start up, the default values are 0.
+- `sensor get`: returns the sum of `foo` and `bar` previously set
+
+Invoking `sensor get` will toggle the green user LED.
+
 ## Change Log
 
 | Date | Change |
@@ -73,3 +85,4 @@ Invoking `sensor fetch` and `sensor read` will toggle the green user LED.
 | 04 MAY 26 | Lesson 6 task 1 - Add sensor_sample_fetch and sensor_channel_get to turn on and off the green LED. |
 | 06 MAY 26 | Lesson 6 task 2 - Add custom API functions called doorstep_do_this() and doorstep_do_that() with custom parameters. See doorstep.h for API usage. |
 | 11 MAY 26 | Lesson 7 task 1 - Enable uart shell and command `sensor`. To use the LED-based task 1 sensor API, set CONFIG_SENSOR=y. |
+| 12 MAY 26 | Lesson 7 task 2 - Implement `sensor set` and `sensor get`. |
