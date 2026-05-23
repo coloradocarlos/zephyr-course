@@ -85,6 +85,16 @@ $ west twister -T tests/calculator -p native_sim
 $ west twister -T tests/ring_buf -p native_sim
 ```
 
+## Test coverage report
+
+To generate a Twister unit test coverage report, run:
+
+```bash
+$ west twister -T tests/ring_buf -p native_sim --coverage --coverage-tool gcovr --coverage-basedir app/modules/ring_buf
+```
+
+The open the file `twister-out/coverage/index.html` in your favorite web browser.
+
 ## Change Log
 
 | Date | Change |
@@ -99,3 +109,4 @@ $ west twister -T tests/ring_buf -p native_sim
 | 11 MAY 26 | Lesson 7 task 1 - Enable uart shell and command `sensor`. To use the LED-based task 1 sensor API, set CONFIG_SENSOR=y. |
 | 12 MAY 26 | Lesson 7 task 2 - Implement `sensor set` and `sensor get`. |
 | 23 MAY 26 | Lesson 8 task 1 - Add Twister unit tests to exercise the `ring_buf` module. |
+| 23 MAY 26 | Lesson 8 task 2 - Add Twister coverage report for the `ring_buf` module. |

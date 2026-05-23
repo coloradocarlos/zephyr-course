@@ -8,5 +8,8 @@ deps
 # IDE's
 *.code-workspace
 
-# Unit test results
-twister-out*
+# Unit test results (keep twister-out/coverage for reports)
+twister-out/*
+!twister-out/coverage/
+!twister-out/coverage/**
+twister-out.*
