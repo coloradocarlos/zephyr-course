@@ -75,6 +75,15 @@ Invoking `sensor get` will toggle the green user LED.
 
 Setting `foo` and `bar` to negative values is valid. It simulates an error condition and displays red letters on the shell console.
 
+## Unit tests
+
+To run the Twister test suites in the `modules` directory:
+
+```bash
+$ west twister -T tests/calculator -p native_sim
+$ west twister -T tests/ring_buf -p native_sim
+```
+
 ## Change Log
 
 | Date | Change |
@@ -88,3 +97,4 @@ Setting `foo` and `bar` to negative values is valid. It simulates an error condi
 | 06 MAY 26 | Lesson 6 task 2 - Add custom API functions called doorstep_do_this() and doorstep_do_that() with custom parameters. See doorstep.h for API usage. |
 | 11 MAY 26 | Lesson 7 task 1 - Enable uart shell and command `sensor`. To use the LED-based task 1 sensor API, set CONFIG_SENSOR=y. |
 | 12 MAY 26 | Lesson 7 task 2 - Implement `sensor set` and `sensor get`. |
+| 23 MAY 26 | Lesson 8 task 1 - Add twister unit tests to exercise the `ring_buf` module. |

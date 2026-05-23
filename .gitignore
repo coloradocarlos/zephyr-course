@@ -7,3 +7,6 @@ deps
 
 # IDE's
 *.code-workspace
+
+# Unit test results
+twister-out*
