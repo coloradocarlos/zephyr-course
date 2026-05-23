@@ -44,7 +44,6 @@ ZTEST(ring_buf_init, test_fresh_state)
 ZTEST(ring_buf_init, test_reinit_clears_state)
 {
 	zassert_ok(rb_push(99), "Push must succeed before reinit");
-
 	zassert_ok(rb_init(4), "Reinit must succeed");
 	zassert_true(rb_is_empty(), "Buffer must be empty after reinit");
 	zassert_equal(rb_count(), 0, "Count must be 0 after reinit");
