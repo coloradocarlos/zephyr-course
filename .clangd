@@ -1,0 +1,3 @@
+# Point clangd at the Zephyr CMake build output (requires: west build ... at least once).
+CompileFlags:
+  CompilationDatabase: build

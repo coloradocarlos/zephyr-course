@@ -28,6 +28,22 @@ cd zephyr-course && ln -sfn ../deps deps
 
 Then reload the window so the Devicetree language server picks up `deps/zephyr` (and `.vscode/settings.json` defaults, if you use them).
 
+### C/C++ navigation (Go to Definition, e.g. `sensor_sample_fetch`)
+
+Zephyr’s build generates **`build/compile_commands.json`** after a successful **`west build`**. Cursor/VS Code needs that file for includes and preprocessor defines (including generated **`autoconf.h`**).
+
+This repo configures that via **`.vscode/settings.json`**, **`zephyr-course.code-workspace`**, and **`.clangd`** (`CompilationDatabase: build`).
+
+After your first configured build:
+
+```bash
+west build -b my_better_board app
+```
+
+(or your usual board). Then **reload the Cursor window**.
+
+**Conditional code:** Headers such as **`sensor.h`** are only visible when **`CONFIG_SENSOR=y`** in your merge of `prj.conf` matches the **`autoconf.h`** produced by your last build. If **`CONFIG_SENSOR=n`**, symbols under **`#if IS_ENABLED(CONFIG_SENSOR)`** may not navigate; temporarily enable **`CONFIG_SENSOR`**, rebuild, and reload IntelliSense.
+
 ## Board setup
 
 This builds for the Octavo OSD32MP1-BRK board. See https://docs.zephyrproject.org/latest/boards/oct/osd32mp1_brk/doc/osd32mp1_brk.html. To build:

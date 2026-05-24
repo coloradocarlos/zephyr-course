@@ -1,5 +1,9 @@
 {
   // Devicetree LSP: symlink `deps -> ../deps` in this repo so Zephyr lives under workspace (see deps in .gitignore).
+  //
+  // C/C++ IntelliSense / Go to Definition: after `west build`, Zephyr emits build/compile_commands.json.
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "clangd.arguments": ["--compile-commands-dir=${workspaceFolder}/build"],
   "devicetree.cwd": "${workspaceFolder}/deps/zephyr",
   "devicetree.preferredContext": "my_little_board",
   "devicetree.allowAdhocContexts": true,

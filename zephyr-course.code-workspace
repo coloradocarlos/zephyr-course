@@ -10,6 +10,8 @@
     }
   ],
   "settings": {
+    "C_Cpp.default.compileCommands": "${workspaceFolder:zephyr-course}/build/compile_commands.json",
+    "clangd.arguments": ["--compile-commands-dir=${workspaceFolder:zephyr-course}/build"],
     "devicetree.cwd": "${workspaceFolder:zephyr}",
     "devicetree.preferredContext": "my_little_board",
     "devicetree.allowAdhocContexts": true,

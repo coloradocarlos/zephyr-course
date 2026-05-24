@@ -41,7 +41,9 @@ static int sensor_sample_fetch_impl(const struct device *dev, enum sensor_channe
 	// Green LED toggle the GPIO
 	TRACE_INF("Green LED toggle (sample fetch)");
 	if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
-	return 50;	// TODO: Replace with actual sensor value
+	// TODO: his function instructs the driver to perform a hardware read.
+	// It captures a "snapshot" of all supported data from the sensor and stores it in the driver's internal buffer
+	return 0;
 }
 
 static int sensor_channel_get_impl(const struct device *dev, enum sensor_channel chan, struct sensor_value *val)
@@ -50,6 +52,9 @@ static int sensor_channel_get_impl(const struct device *dev, enum sensor_channel
 	// Green LED toggle the GPIO
 	TRACE_INF("Green LED toggle (channel get)");
 	if (gpio_pin_toggle_dt(&led_green) < 0) return 0;
+	// TODO: Once a sample is fetched, you use this function to extract a
+	// specific piece of data (e.g., temperature, pressure, or acceleration) from the driver's buffer.
+	// The data is returned in a standard sensor_value structure
 	val->val1 = 100;	// TODO: Replace with actual sensor value
 	val->val2 = 200;	// TODO: Replace with actual sensor value
 	return 0;

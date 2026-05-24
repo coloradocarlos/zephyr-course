@@ -162,6 +162,8 @@ static int cmd_sensor_read(const struct shell *sh, size_t argc, char **argv)
 	if (ret < 0) {
 		shell_error(sh, "sensor_channel_get failed: %d", ret);
 	} else {
+		// TODO: val1 + val2*1e-6 is the Zephyr sensor_value decoding (integer part + micro fractional
+		//       part); use sensor_value_to_float/double helpers in sensor.h instead of assuming a mantissa/exponent layout.
 		shell_print(sh, "sensor_channel_get: ret=%d val1=%d val2=%d", ret, val.val1, val.val2);
 	}
 
