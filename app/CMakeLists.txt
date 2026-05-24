@@ -15,6 +15,9 @@ project(my_zephyr_app)
 
 zephyr_include_directories(include)
 
+#
+# Code for each target app depends on the homework requirements. Select only one.
+#
 target_sources(app PRIVATE
 #	src/main.cpp
 #   src/hello_world.c

@@ -7,6 +7,7 @@ deps
 
 # IDE's
 *.code-workspace
+!zephyr-course.code-workspace
 
 # Unit test results (keep twister-out/coverage for reports)
 twister-out/*
