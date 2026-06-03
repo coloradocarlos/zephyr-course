@@ -1,4 +1,12 @@
 {
+  "files.associations": {
+    "**/Kconfig": "plaintext",
+    "**/Kconfig.*": "plaintext"
+  },
+  "C_Cpp.files.exclude": {
+    "**/Kconfig": true,
+    "**/Kconfig.*": true
+  },
   // Devicetree LSP: symlink `deps -> ../deps` in this repo so Zephyr lives under workspace (see deps in .gitignore).
   //
   // C/C++ IntelliSense / Go to Definition: after `west build`, Zephyr emits build/compile_commands.json.
