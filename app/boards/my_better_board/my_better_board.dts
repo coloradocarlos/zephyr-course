@@ -49,3 +49,29 @@
 	current-speed = <115200>;
 	status = "okay";
 };
+
+/*
+ * osd32mp1_brk.overlay (merged for this course) binds console + shell to UART7 — enable it here.
+ */
+&uart7 {
+	pinctrl-0 = <&uart7_tx_pa15 &uart7_rx_pb3>;
+	pinctrl-names = "default";
+	current-speed = <115200>;
+	status = "okay";
+};
+
+&uart7_tx_pa15 {
+	bias-disable;
+};
+
+&uart7_rx_pb3 {
+	bias-disable;
+};
+
+&usart2_tx_pf5 {
+	bias-disable;
+};
+
+&usart2_rx_pf4 {
+	bias-disable;
+};

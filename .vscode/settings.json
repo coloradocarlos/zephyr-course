@@ -1,0 +1,44 @@
+{
+  "files.associations": {
+    "**/Kconfig": "plaintext",
+    "**/Kconfig.*": "plaintext"
+  },
+  "C_Cpp.files.exclude": {
+    "**/Kconfig": true,
+    "**/Kconfig.*": true
+  },
+  // Devicetree LSP: symlink `deps -> ../deps` in this repo so Zephyr lives under workspace (see deps in .gitignore).
+  //
+  // C/C++ IntelliSense / Go to Definition: after `west build`, Zephyr emits build/compile_commands.json.
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "clangd.arguments": ["--compile-commands-dir=${workspaceFolder}/build"],
+  "devicetree.cwd": "${workspaceFolder}/deps/zephyr",
+  "devicetree.preferredContext": "my_little_board",
+  "devicetree.allowAdhocContexts": true,
+  "devicetree.defaultIncludePaths": [
+    "${workspaceFolder}/deps/zephyr/dts",
+    "${workspaceFolder}/deps/zephyr/dts/arm",
+    "${workspaceFolder}/deps/zephyr/dts/common",
+    "${workspaceFolder}/deps/zephyr/dts/vendor",
+    "${workspaceFolder}/deps/zephyr/include",
+    "${workspaceFolder}/deps/modules/hal/stm32/dts"
+  ],
+  "devicetree.defaultBindingType": "Zephyr",
+  "devicetree.defaultZephyrBindings": ["${workspaceFolder}/deps/zephyr/dts/bindings"],
+  "devicetree.contexts": [
+    {
+      "ctxName": "my_little_board",
+      "bindingType": "Zephyr",
+      "dtsFile": "${workspaceFolder}/app/boards/my_little_board/my_little_board.dts",
+      "includePaths": [
+        "${workspaceFolder}/deps/zephyr/dts",
+        "${workspaceFolder}/deps/zephyr/dts/arm",
+        "${workspaceFolder}/deps/zephyr/dts/common",
+        "${workspaceFolder}/deps/zephyr/dts/vendor",
+        "${workspaceFolder}/deps/zephyr/include",
+        "${workspaceFolder}/deps/modules/hal/stm32/dts"
+      ],
+      "zephyrBindings": ["${workspaceFolder}/deps/zephyr/dts/bindings"]
+    }
+  ]
+}

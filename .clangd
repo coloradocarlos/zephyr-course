@@ -1,0 +1,12 @@
+# Point clangd at the Zephyr CMake build output (requires: west build ... at least once).
+CompileFlags:
+  CompilationDatabase: build
+---
+# Kconfig is Zephyr's configuration language — not C/C++. Clangd parses it as source and
+# reports bogus errors such as ``Unknown type name 'mainmenu'``.
+If:
+  PathMatch: ^(.*/)?Kconfig(\..+)?$
+CompileFlags:
+  CompilationDatabase: None
+Diagnostics:
+  Suppress: "*"

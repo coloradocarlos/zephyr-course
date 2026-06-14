@@ -14,6 +14,36 @@ Follow the following guide:
 Make sure to select appropriate OS and to perform all steps till
 [Build the Blinky Sample](https://docs.zephyrproject.org/latest/develop/getting_started/index.html#build-the-blinky-sample).
 
+### Devicetree tooling (VS Code / Cursor)
+
+When your **West** checkout lives next to this repo (`../deps` holding `zephyr`, `modules`, …) but you open **only** the `zephyr-course` folder, the Devicetree extension often shows **unable to resolve include** on board `.dts` files because `${workspaceFolder}/deps/zephyr` does not exist.
+
+**Option A (recommended):** open [`zephyr-course.code-workspace`](zephyr-course.code-workspace) with **File → Open Workspace from File…**. That multi-root workspace adds Zephyr (and configures include paths, including STM32 HAL DTS under `modules/hal/stm32/dts`) without a symlink.
+
+**Option B:** stay on **Open Folder** for `zephyr-course` and add a symlink so `deps` appears inside this repo (`deps` is already in `.gitignore`):
+
+```bash
+cd zephyr-course && ln -sfn ../deps deps
+```
+
+Then reload the window so the Devicetree language server picks up `deps/zephyr` (and `.vscode/settings.json` defaults, if you use them).
+
+### C/C++ navigation (Go to Definition, e.g. `sensor_sample_fetch`)
+
+Zephyr’s build generates **`build/compile_commands.json`** after a successful **`west build`**. Cursor/VS Code needs that file for includes and preprocessor defines (including generated **`autoconf.h`**).
+
+This repo configures that via **`.vscode/settings.json`**, **`zephyr-course.code-workspace`**, and **`.clangd`** (`CompilationDatabase: build`).
+
+After your first configured build:
+
+```bash
+west build -b my_better_board app
+```
+
+(or your usual board). Then **reload the Cursor window**.
+
+**Conditional code:** Headers such as **`sensor.h`** are only visible when **`CONFIG_SENSOR=y`** in your merge of `prj.conf` matches the **`autoconf.h`** produced by your last build. If **`CONFIG_SENSOR=n`**, symbols under **`#if IS_ENABLED(CONFIG_SENSOR)`** may not navigate; temporarily enable **`CONFIG_SENSOR`**, rebuild, and reload IntelliSense.
+
 ## Board setup
 
 This builds for the Octavo OSD32MP1-BRK board. See https://docs.zephyrproject.org/latest/boards/oct/osd32mp1_brk/doc/osd32mp1_brk.html. To build:
@@ -110,3 +140,4 @@ The open the file `twister-out/coverage/index.html` in your favorite web browser
 | 12 MAY 26 | Lesson 7 task 2 - Implement `sensor set` and `sensor get`. |
 | 23 MAY 26 | Lesson 8 task 1 - Add Twister unit tests to exercise the `ring_buf` module. |
 | 23 MAY 26 | Lesson 8 task 2 - Add Twister coverage report for the `ring_buf` module. |
+| 24 MAY 26 | Add VSCode / Cursor setup instructions for analyzing DTS files. |
